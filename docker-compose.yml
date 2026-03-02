@@ -1,0 +1,67 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: orders_db
+    ports:
+      - "15432:5432"
+    volumes:
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  auth_mock:
+    image: ruby:3.2-alpine
+    working_dir: /app
+    volumes:
+      - ./auth_mock:/app
+    environment:
+      - JWT_SECRET=super-secret-key-1234
+    ports:
+      - "18080:8080"
+    command: sh -c "apk add --no-cache build-base && bundle install && ruby app.rb"
+
+  order_api:
+    image: ruby:3.2-alpine
+    working_dir: /app
+    volumes:
+      - ./order_api:/app
+    environment:
+      - DB_HOST=postgres
+      - DB_USER=postgres
+      - DB_PASSWORD=postgres
+      - DB_NAME=orders_db
+      - DB_PORT=5432
+      - JWT_SECRET=super-secret-key-1234
+    ports:
+      - "18081:8080"
+    command: sh -c "apk add --no-cache build-base postgresql-dev && bundle install && ruby app.rb"
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  tests:
+    image: ruby:3.2
+    working_dir: /project
+    volumes:
+      - .:/project
+    environment:
+      - DB_HOST=postgres
+      - DB_USER=postgres
+      - DB_PASSWORD=postgres
+      - DB_NAME=orders_db
+      - DB_PORT=5432
+      - KEYCLOAK_TOKEN_URL=http://auth_mock:8080/realms/master/protocol/openid-connect/token
+      - API_BASE_URL=http://order_api:8080
+    depends_on:
+      - auth_mock
+      - order_api
+      - postgres
+    command: bash -c "apt-get update && apt-get install -y libpq-dev && bundle check || bundle install && bundle exec cucumber -f pretty"

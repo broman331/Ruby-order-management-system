@@ -1,0 +1,10 @@
+source 'https://rubygems.org'
+
+gem 'cucumber', '~> 9.0'
+gem 'rspec-expectations', '~> 3.12'
+gem 'faraday', '~> 2.8'
+gem 'faraday-retry', '~> 2.2'
+gem 'faraday-multipart', '~> 1.0'
+gem 'pg', '~> 1.5'
+gem 'jsonpath', '~> 1.1'
+gem 'dotenv', '~> 3.0'
