@@ -26,7 +26,12 @@ services:
       - JWT_SECRET=super-secret-key-1234
     ports:
       - "18080:8080"
-    command: sh -c "apk add --no-cache build-base && bundle install && ruby app.rb"
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:8080/health" ]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+    command: sh -c "apk add --no-cache curl build-base && bundle install && ruby app.rb"
 
   order_api:
     image: ruby:3.2-alpine
@@ -42,7 +47,12 @@ services:
       - JWT_SECRET=super-secret-key-1234
     ports:
       - "18081:8080"
-    command: sh -c "apk add --no-cache build-base postgresql-dev && bundle install && ruby app.rb"
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:8080/health" ]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+    command: sh -c "apk add --no-cache curl build-base postgresql-dev && bundle install && ruby app.rb"
     depends_on:
       postgres:
         condition: service_healthy
@@ -61,7 +71,10 @@ services:
       - KEYCLOAK_TOKEN_URL=http://auth_mock:8080/realms/master/protocol/openid-connect/token
       - API_BASE_URL=http://order_api:8080
     depends_on:
-      - auth_mock
-      - order_api
-      - postgres
+      auth_mock:
+        condition: service_healthy
+      order_api:
+        condition: service_healthy
+      postgres:
+        condition: service_healthy
     command: bash -c "apt-get update && apt-get install -y libpq-dev && bundle check || bundle install && bundle exec cucumber -f pretty"
