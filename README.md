@@ -2,6 +2,11 @@
 
 ![CI Status](https://github.com/broman331/Ruby-order-management-system/actions/workflows/ci.yml/badge.svg)
 
+> [!IMPORTANT]
+> **CI/CD Pipeline Note**: The CI build for this project is **intentionally configured to fail**. 
+> This is by design to demonstrate the **Agentic Self-Healing Hook**. 
+> The suite includes a negative test scenario (`Attempt to create an invalid order`) that triggers a failure, which in turn showcases the framework's ability to automatically scrape and report database error logs directly in the CI console.
+
 A production-grade Ruby Order Management API secured with Keycloak/JWT, featuring an 'Agentic' BDD automation framework that auto-extracts database error logs upon test failure.
 
 ## 🚀 About the Project
