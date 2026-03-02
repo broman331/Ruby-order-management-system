@@ -1,6 +1,8 @@
 # Ruby Order Management System
 
-This repository demonstrates a production-grade **Ruby-based Order Management API** secured with **JWT/OAuth2** and a corresponding **BDD Automation Framework** using Cucumber.
+![CI Status](https://github.com/broman331/Ruby-order-management-system/actions/workflows/ci.yml/badge.svg)
+
+A production-grade Ruby Order Management API secured with Keycloak/JWT, featuring an 'Agentic' BDD automation framework that auto-extracts database error logs upon test failure.
 
 ## 🚀 About the Project
 
