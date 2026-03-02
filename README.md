@@ -1,6 +1,14 @@
-# Keycloak-Secured Order Management System & Automation Framework
+# Ruby Order Management System
 
-This project demonstrates a production-grade **Ruby-based Order Management API** secured with **JWT/OAuth2** and a corresponding **BDD Automation Framework** using Cucumber.
+This repository demonstrates a production-grade **Ruby-based Order Management API** secured with **JWT/OAuth2** and a corresponding **BDD Automation Framework** using Cucumber.
+
+## 🚀 About the Project
+
+This is a complete, high-level Ruby ecosystem featuring:
+*   **Structured REST API**: A Sinatra-based Order Management service with custom JWT/OAuth2 AuthMiddleware and PostgreSQL persistence.
+*   **Security Emulation**: A dedicated `auth_mock` service that generates cryptographically signed JWTs, simulating a real-world Keycloak issuer.
+*   **Agentic BDD Framework**: A Cucumber-based automation suite with a self-healing `After` hook that proactively retrieves PostgreSQL error logs on failure for instant root-cause analysis.
+*   **Full Orchestration**: Entire stack (API, Auth Mock, DB, and Tests) containerized via Docker Compose for seamless E2E execution.
 
 ## 🚀 Architecture Overview
 
